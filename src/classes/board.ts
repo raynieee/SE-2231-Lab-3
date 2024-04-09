@@ -8,8 +8,12 @@ class Board {
     this.n = tiles.length;
   }
 
+  public getTiles(): number[][] {
+    return this.tiles;
+  }
+
   // string representation of this board
-  displayBoard(): string {
+  public displayBoard(): string {
     let boardRep = "";
     for (let i = 0; i < this.n; i++) {
       // iteration over the rows
@@ -22,12 +26,12 @@ class Board {
     return boardRep;
   }
 
-  dimension(): number {
+  public dimension(): number {
     return this.n;
   }
 
   // number of tiles out of place
-  hamming(): number {
+  public hamming(): number {
     let count = 0;
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
@@ -50,7 +54,7 @@ class Board {
   }
 
   // sum of Manhattan distances between tiles and goal
-  manhattan(): number {
+  public manhattan(): number {
     let manhattanDistance = 0;
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
@@ -64,7 +68,7 @@ class Board {
   }
 
   // is this board the goal board?
-  isGoal(): boolean {
+  public isGoal(): boolean {
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
         if (this.tiles[i][j] !== 0 && this.tiles[i][j] !== i * this.n + j + 1) {
@@ -76,7 +80,7 @@ class Board {
   }
 
   // does this board equal y?
-  equals(y: Board): boolean {
+  public equals(y: Board): boolean {
     if (y.n !== this.n) {
       return false; // not of same dimension, therefore automatic unequal
     }
@@ -92,7 +96,7 @@ class Board {
   }
 
   // all neighboring boards
-  neighbors(): Board[] {
+  public neighbors(): Board[] {
     let neighbors: Board[] = [];
     for (let i = 0; i < this.n; i++) { // rows of the board
       for (let j = 0; j < this.n; j++) { // columns of the board
@@ -122,7 +126,7 @@ class Board {
   }
 
   // a board that is obtained by exchanging any pair of tiles
-  twin(): Board {
+  public twin(): Board {
     // copy of this.tiles, ensures no modifications happen on og array
     const twinTiles: number[][] = this.tiles.map((row) => [...row]);
 
