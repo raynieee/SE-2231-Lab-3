@@ -37,13 +37,24 @@ class Board {
 
   // sum of Manhattan distances between tiles and goal
   manhattan(): number {
-    // PLS MODIFY
-    return 0;
+    let manhattanDistance = 0;
+    for (let i = 0; i < this.n; i++) {
+      for (let j = 0; j < this.n; j++) {
+        const expectedRow = Math.floor((this.tiles[i][j] - 1) / this.n); // Calculate the expected position of the tile in the goal state
+        const expectedCol = (this.tiles[i][j] - 1) % this.n; // Calculate the Manhattan distance for this tile
+        manhattanDistance += Math.abs(i - expectedRow) + Math.abs(j - expectedCol);
+      }
+    }
+    return manhattanDistance;
   }
 
   // is this board the goal board?
   isGoal(): boolean {
-    // PLS MODIFY
+    for (let i = 0; i < this.n; i++) { // rows
+      for (let j = 0; j < this.n; j++) { // columns
+        
+      }
+    }
     return true;
   }
 
