@@ -90,8 +90,32 @@ class Board {
 
   // all neighboring boards
   neighbors(): Board[] {
-    // PLS MODIFY
-    return [];
+    let neighbors: Board[] = [];
+    for (let i = 0; i < this.n; i++) { // rows of the board
+      for (let j = 0; j < this.n; j++) { // columns of the board
+        if (this.tiles[i][j] === 0) { // check the current tile at (i, j) neighboring tiles
+          if (i > 0) { // if the current tile is not in the first row
+            neighbors.push(this.swapTiles(i , j, i - 1, j)); // swap current tile with the tile above it ex. 4,0,5 -> 0, 4, 5
+          }
+          if (i < this.n - 1) { // if the current tile is not in the last row
+            neighbors.push(this.swapTiles(i, j, i + 1, j)); // swap current tile with the tile below it ex. 4, 0, 5 -> 4, 5, 0
+          }
+          if (j > 0) { // if current tile is not in the first column
+            neighbors.push(this.swapTiles(i, j, i, j - 1)); // swap current tile with the tile to the left
+          }
+          if (j < this.n - 1) { // if current tile is not in the last column
+            neighbors.push(this.swapTiles(i, j, i, j + 1)); // swap current tile with the tile to the right
+          }
+        }
+      }
+    }
+    return neighbors;
+  }
+
+  private swapTiles(row1: number, col1: number, row2: number, col2: number): Board {
+    let newTiles = this.tiles.map(row => [...row]);
+    [newTiles[row1][col1], newTiles[row2][col2]] = [newTiles[row2][col2], newTiles[row1][col1]];
+    return new Board(newTiles);
   }
 
   // a board that is obtained by exchanging any pair of tiles
