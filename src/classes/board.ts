@@ -1,20 +1,23 @@
 class Board {
-  private tiles: number[][];  // create a board from an n-by-n array of tiles,
-  private n: number;  // where tiles[row][col] = tile at (row, col)
+  private tiles: number[][]; // create a board from an n-by-n array of tiles,
+  private n: number; // where tiles[row][col] = tile at (row, col)
 
   constructor(tiles: number[][]) {
-    this.n = tiles.length;
+    // creates a copy of the tiles array, ensures no modifications happen on og array
     this.tiles = tiles.map((row) => [...row]);
-    // creates a copy of the tiles array, ensures modifications made to copied array don't affect original array
+    this.n = tiles.length;
   }
 
+  // string representation of this board
   displayBoard(): string {
-    let boardRep = "";  // string representation of this board
-    for (let i = 0; i < this.n; i++) {  // iteration over the rows
-      for (let j = 0; j < this.n; j++) {  // iteration over the columns
-        boardRep += this.tiles[i][j] + " ";  // tiles numbered from 1 to n^2 - 1, places a space after each num
+    let boardRep = "";
+    for (let i = 0; i < this.n; i++) {
+      // iteration over the rows
+      for (let j = 0; j < this.n; j++) {
+        // iteration over the columns
+        boardRep += this.tiles[i][j] + " "; // tiles numbered from 1 to n^2 - 1, places a space after each num
       }
-      boardRep += "\n";  // next line after iterating through n columns
+      boardRep += "\n"; // next line after iterating through n columns
     }
     return boardRep;
   }
@@ -23,7 +26,8 @@ class Board {
     return this.n;
   }
 
-  hamming(): number {  // number of tiles out of place
+  // number of tiles out of place
+  hamming(): number {
     let count = 0;
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
@@ -40,7 +44,7 @@ class Board {
     if (this.tiles[this.n - 1][this.n - 1] === 0) {
       finalCount = count - 1; // minus one if blank space is in the goal position
     } else {
-      finalCount = count; // otherwise, this
+      finalCount = count;
     }
     return finalCount;
   }
@@ -52,14 +56,15 @@ class Board {
       for (let j = 0; j < this.n; j++) {
         const expectedRow = Math.floor((this.tiles[i][j] - 1) / this.n); // Calculate the expected position of the tile in the goal state
         const expectedCol = (this.tiles[i][j] - 1) % this.n; // Calculate the Manhattan distance for this tile
-        manhattanDistance += Math.abs(i - expectedRow) + Math.abs(j - expectedCol);
+        manhattanDistance +=
+          Math.abs(i - expectedRow) + Math.abs(j - expectedCol);
       }
     }
     return manhattanDistance;
   }
 
+  // is this board the goal board?
   isGoal(): boolean {
-    // is this board the goal board?
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
         if (this.tiles[i][j] !== 0 && this.tiles[i][j] !== i * this.n + j + 1) {
@@ -70,16 +75,14 @@ class Board {
     return true; // if tiles are in correct position
   }
 
+  // does this board equal y?
   equals(y: Board): boolean {
-    // does this board equal y?
     if (y.n !== this.n) {
       return false; // not of same dimension, therefore automatic unequal
     }
 
     for (let i = 0; i < this.n; i++) {
-      // rows
       for (let j = 0; j < this.n; j++) {
-        // columns
         if (this.tiles[i][j] !== y.tiles[i][j]) {
           return false; // if tiles in current board don't match with y
         }
@@ -120,8 +123,25 @@ class Board {
 
   // a board that is obtained by exchanging any pair of tiles
   twin(): Board {
-    // PLS MODIFY
-    return new Board([[]]);
+    // copy of this.tiles, ensures no modifications happen on og array
+    const twinTiles: number[][] = this.tiles.map((row) => [...row]);
+
+    // generate 2 random indices for 2 different tiles
+    const getRandomIndex = () => Math.floor(Math.random() * this.n);
+    let index1 = getRandomIndex();
+    let index2 = getRandomIndex();
+
+    // ensure indices are different
+    while (index2 === index1) {
+      index2 = getRandomIndex();
+    }
+
+    // swapping tiles based on indices
+    const temp = twinTiles[index1][0]; // store value1 temporarily in variable
+    twinTiles[index1][0] = twinTiles[index2][0]; // assign value2 to value 1
+    twinTiles[index2][0] = temp; // assign value1 to value 2
+
+    return new Board(twinTiles);
   }
 }
 
