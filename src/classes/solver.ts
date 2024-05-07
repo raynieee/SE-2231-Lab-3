@@ -32,24 +32,23 @@ class Solver {
   // is the initial board solvable? (see below)
   isSolvable(): boolean {
     const dimension = this.initial!.dimension();
-    const tiles = this.initial!.tiles.flat();
-
+    const tiles = this.initial!.tiles;
     let inversionCount = 0;
-    let blanks = 0;
+    let blankRow = 0;
 
-    for (let i = 0; i < dimension * dimension; i++) {
-      if (tiles[i] === 0) {
-        blanks++;
-        continue;
-      }
-
-      for (let j = i + 1; j < dimension * dimension; j++) {
-        if (tiles[j] === 0) {
+    for (let i = 0; i < dimension; i++) {
+      for (let j = 0; j < dimension; j++) {
+        if (tiles[i][j] === 0) {
+          blankRow = i;
           continue;
         }
 
-        if (tiles[i] > tiles[j]) {
-          inversionCount++;
+        for (let k = i; k < dimension; k++) {
+          for (let l = k === i ? j + 1 : 0; l < dimension; l++) {
+            if (tiles[k][l] > 0 && tiles[k][l] < tiles[i][j]) {
+              inversionCount++;
+            }
+          }
         }
       }
     }
@@ -57,7 +56,7 @@ class Solver {
     if (dimension % 2 === 1) {
       return inversionCount % 2 === 0;
     } else {
-      return (inversionCount + blanks) % 2 === 1;
+      return (inversionCount + blankRow) % 2 === 1;
     }
   }
 
