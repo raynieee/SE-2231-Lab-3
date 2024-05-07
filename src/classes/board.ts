@@ -1,11 +1,13 @@
 class Board {
-  private tiles: number[][]; // create a board from an n-by-n array of tiles,
+  tiles: number[][]; // create a board from an n-by-n array of tiles,
   private n: number; // where tiles[row][col] = tile at (row, col)
+  previousBoard: Board | null;
 
   constructor(tiles: number[][]) {
     // creates a copy of the tiles array, ensures no modifications happen on og array
     this.tiles = tiles.map((row) => [...row]);
     this.n = tiles.length;
+    this.previousBoard = null;
   }
 
   public getTiles(): number[][] {
@@ -39,18 +41,12 @@ class Board {
         if (goalPlacement === this.n * this.n) {
           goalPlacement = 0; // for the last tile
         }
-        if (this.tiles[i][j] !== goalPlacement) {
+        if (this.tiles[i][j] !== goalPlacement && this.tiles[i][j] !== 0) {
           count++;
         }
       }
     }
-    let finalCount = 0;
-    if (this.tiles[this.n - 1][this.n - 1] === 0) {
-      finalCount = count - 1; // minus one if blank space is in the goal position
-    } else {
-      finalCount = count;
-    }
-    return finalCount;
+    return count;
   }
 
   // sum of Manhattan distances between tiles and goal
@@ -58,10 +54,12 @@ class Board {
     let manhattanDistance = 0;
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
-        const expectedRow = Math.floor((this.tiles[i][j] - 1) / this.n); // Calculate the expected position of the tile in the goal state
-        const expectedCol = (this.tiles[i][j] - 1) % this.n; // Calculate the Manhattan distance for this tile
-        manhattanDistance +=
-          Math.abs(i - expectedRow) + Math.abs(j - expectedCol);
+        if (this.tiles[i][j] !== 0) { // No need to calculate distance for the blank tile
+          const tileValue = this.tiles[i][j];
+          const goalRow = Math.floor((tileValue - 1) / this.n); // Calculate the expected row
+          const goalCol = (tileValue - 1) % this.n; // Calculate the expected column
+          manhattanDistance += Math.abs(i - goalRow) + Math.abs(j - goalCol); // Sum of vertical and horizontal distance
+        }
       }
     }
     return manhattanDistance;
@@ -146,6 +144,10 @@ class Board {
     twinTiles[index2][0] = temp; // assign value1 to value 2
 
     return new Board(twinTiles);
+  }
+
+  toStrings() {
+    return this.tiles.map(row => row.join(" ")).join("\n");
   }
 }
 

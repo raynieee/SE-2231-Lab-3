@@ -10,9 +10,9 @@ class SearchNode {
     moves: number,
     previousSearchNode: SearchNode | null = null
   ) {
-    this.board = board
-    this.moves = moves
-    this.previousSearchNode = previousSearchNode
+    this.board = board;
+    this.moves = moves;
+    this.previousSearchNode = previousSearchNode;
   }
 
   manhattanPriority(): number {
@@ -21,6 +21,22 @@ class SearchNode {
 
   hammingPriority(): number {
     return this.moves + this.board.hamming();
+  }
+
+  priority(): number {
+    return this.manhattanPriority();
+  }
+
+  getBoard(): Board {
+    return this.board;
+  }
+
+  neighbors(): Board[] {
+    return this.board.neighbors();
+  }
+
+  displayBoard() {
+    return this.board.displayBoard();
   }
 }
 
